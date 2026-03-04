@@ -855,6 +855,22 @@ describe("tws-gateway-client", () => {
     expect(orderIds).toEqual([300, 301]);
   });
 
+  test("previewStockOrderWhatIf rejects fractional quantities", async () => {
+    const { client } = createConnectedClient({
+      managedAccounts: ["DU123"],
+      nextValidOrderId: 300,
+    });
+    await expect(
+      client.previewStockOrderWhatIf({
+        symbol: "AAPL",
+        action: "BUY",
+        quantity: 1.5,
+        orderType: "MKT",
+        timeoutMs: 5000,
+      }),
+    ).rejects.toThrow("quantity must be a positive integer.");
+  });
+
   test("previewStockOrderWhatIf sends a protobuf placeOrder request and resolves from openOrder", async () => {
     const { client, writes } = createConnectedClient({
       managedAccounts: ["DU123"],

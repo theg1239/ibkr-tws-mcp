@@ -106,6 +106,14 @@ describe("register-tools", () => {
         limitPrice: 100,
       }),
     ).toThrow("limitPrice is only allowed when orderType is LMT.");
+
+    const fractionalOrder = parseToolInput(previewSchema, {
+      symbol: "AAPL",
+      action: "BUY",
+      quantity: 1.5,
+      orderType: "MKT",
+    }) as { quantity: number };
+    expect(fractionalOrder.quantity).toBe(1.5);
   });
 
   test("get_stock_historical_bars schema enforces symbol/symbols exclusivity", () => {
